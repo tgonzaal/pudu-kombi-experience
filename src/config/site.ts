@@ -16,6 +16,7 @@ export const siteConfig = {
   },
   nav: [
     { title: "Inicio", href: "/" },
+    { title: "La Kombi", href: "/kombi" },
     { title: "Experiencia", href: "/experiencia" },
   ],
 } as const;

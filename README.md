@@ -67,6 +67,50 @@ Cargadas con `next/font` (self-hosted, sin FOUT) en [src/lib/fonts.ts](src/lib/f
 
 `next-themes` con `attribute="class"` + variante `dark` de Tailwind v4. Los tokens viven en [src/app/globals.css](src/app/globals.css) (`:root` y `.dark`). El toggle está en el header.
 
+## Visor 3D (`/kombi`)
+
+Visor tipo configurador automotriz de una **Volkswagen Type 2 T2 Bay
+Window** real. El visor no genera geometría propia: carga un modelo
+GLB/GLTF profesional para garantizar fidelidad absoluta al vehículo.
+
+**Interacción (única y deliberadamente simple):** rotación 360° con el
+mouse, zoom, auto-rotación lenta (toggle), y reinicio de cámara. Sin
+puertas, hotspots ni animaciones mecánicas — la Kombi se contempla
+como en una sala de exhibición (fondo estudio, iluminación HDRI por
+lightformers, sombras suaves).
+
+### Integrar el modelo
+
+1. **Consigue un GLB profesional de la T2 Bay Window** en un
+   marketplace (Sketchfab, TurboSquid, CGTrader…). Verifica la
+   licencia para uso web/comercial; ten presente que la marca y el
+   emblema VW pertenecen a Volkswagen AG y un uso comercial puede
+   requerir autorización adicional.
+2. **Aplica la identidad PUDÚ** (idealmente horneada en las texturas
+   del modelo con Blender, usando la imagen de referencia): pintura
+   verde `#14603c`, logotipo del pudú y texto «PUDÚ · Ecosistema en
+   Movimiento» en los laterales.
+3. **Optimiza el archivo** con gltf-transform (Draco + texturas):
+
+   ```bash
+   npx @gltf-transform/cli optimize kombi-original.glb kombi.glb \
+     --compress draco --texture-compress webp --texture-size 2048
+   ```
+
+4. **Colócalo en** `public/models/kombi.glb`. El visor lo detecta,
+   lo normaliza al largo real (4,505 m), lo apoya en el piso y
+   activa sombras. Sin el archivo, muestra instrucciones en pantalla.
+
+Configuración en [src/components/viewer/config.ts](src/components/viewer/config.ts):
+ruta del modelo, escala, y un modo opcional (`APPLY_PUDU_PAINT`) que
+reemplaza los materiales de carrocería por pintura PBR verde con
+clearcoat si tu GLB viene sin livery.
+
+El decoder **Draco se sirve localmente** desde `public/draco/` (sin
+CDN). El canvas se divide en su propio chunk (`next/dynamic`,
+`ssr: false`) y la pantalla de carga muestra el progreso real de
+descarga del GLB.
+
 ## Experiencia 3D
 
 La ruta `/experiencia` contiene la Kombi PUDÚ modelada 100 % por código
