@@ -67,13 +67,31 @@ Cargadas con `next/font` (self-hosted, sin FOUT) en [src/lib/fonts.ts](src/lib/f
 
 `next-themes` con `attribute="class"` + variante `dark` de Tailwind v4. Los tokens viven en [src/app/globals.css](src/app/globals.css) (`:root` y `.dark`). El toggle está en el header.
 
-## Experiencia 3D (próximo paso)
+## Experiencia 3D
 
-La ruta `/experiencia` está reservada. Al construir la escena:
+La ruta `/experiencia` contiene la Kombi PUDÚ modelada 100 % por código
+(sin assets externos) con React Three Fiber:
 
-1. Crear `src/components/experience/scene.tsx` como componente cliente.
-2. Cargar el canvas con `next/dynamic` y `ssr: false`.
-3. `three` ya está en `transpilePackages` en `next.config.ts`.
+- **Escena**: iluminación de estudio tipo HDRI (`Environment` + lightformers),
+  sombras, niebla y postprocesado (bloom + viñeta).
+- **Kombi**: materiales PBR (pintura verde con clearcoat, cromo, vidrio),
+  gráfica de marca generada en canvas y un interior de estudio para
+  grabar podcasts (escritorio, micrófonos, pantalla ON AIR, paneles
+  acústicos, tiras LED).
+- **Partes móviles** animadas con GSAP: puerta del conductor, del
+  copiloto, corrediza (solo lado derecho), portón trasero y tapa del
+  motor. Se abren desde el panel de control o haciendo clic en ellas.
+- **Cámara**: intro cinematográfica, órbita libre con inercia, zoom y
+  paneo (`OrbitControls`), auto-rotación hasta la primera interacción.
+- **Carga**: pantalla de carga de marca; el canvas se importa con
+  `next/dynamic` (`ssr: false`) y se divide en su propio chunk.
+
+Estructura en `src/components/experience/`: `experience-shell.tsx`
+(UI + estado), `scene.tsx` (Canvas), `experience.tsx` (luces/cámara/efectos)
+y `kombi/` (carrocería, puertas, interior, materiales, texturas).
+
+> Tip: agrega `?instant` a la URL para saltar las animaciones al estado
+> final (útil en tests automatizados y capturas).
 
 ## Deploy en Vercel
 
