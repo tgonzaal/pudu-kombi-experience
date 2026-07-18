@@ -70,8 +70,14 @@ Cargadas con `next/font` (self-hosted, sin FOUT) en [src/lib/fonts.ts](src/lib/f
 ## Visor 3D (`/kombi`)
 
 Visor tipo configurador automotriz de una **Volkswagen Type 2 T2 Bay
-Window** real. El visor no genera geometría propia: carga un modelo
-GLB/GLTF profesional para garantizar fidelidad absoluta al vehículo.
+Window**. Incluye una T2 procedural de alta fidelidad construida por
+código (carrocería de una pieza con curvas y bisel, parabrisas
+panorámico de una pieza, líneas de chapa, faros redondos, parachoques
+envolventes, identidad PUDÚ) que se muestra por defecto. Si colocas un
+GLB profesional en `public/models/kombi.glb`, el visor lo usa
+automáticamente en su lugar — es la vía recomendada para fidelidad
+absoluta (modelos desde ~US$10–80 en Sketchfab, algunos gratis con
+licencia CC; más opciones en TurboSquid y CGTrader).
 
 **Interacción (única y deliberadamente simple):** rotación 360° con el
 mouse, zoom, auto-rotación lenta (toggle), y reinicio de cámara. Sin
@@ -79,7 +85,14 @@ puertas, hotspots ni animaciones mecánicas — la Kombi se contempla
 como en una sala de exhibición (fondo estudio, iluminación HDRI por
 lightformers, sombras suaves).
 
-### Integrar el modelo
+**Estado actual:** ya hay un modelo integrado en
+`public/models/kombi.glb` (T2 Bay Window de Sketchfab, 450 KB tras
+optimizar con Draco + WebP 2048). La identidad PUDÚ va horneada en su
+textura de color: pintura verde `#14603c`, wordmark y la ilustración
+del pudú en ambos costados. Si el modelo original es Creative Commons
+(CC-BY), recuerda mantener el crédito al autor en el sitio.
+
+### Integrar (o reemplazar) el modelo
 
 1. **Consigue un GLB profesional de la T2 Bay Window** en un
    marketplace (Sketchfab, TurboSquid, CGTrader…). Verifica la
@@ -99,7 +112,7 @@ lightformers, sombras suaves).
 
 4. **Colócalo en** `public/models/kombi.glb`. El visor lo detecta,
    lo normaliza al largo real (4,505 m), lo apoya en el piso y
-   activa sombras. Sin el archivo, muestra instrucciones en pantalla.
+   activa sombras. Sin el archivo, se muestra la T2 procedural.
 
 Configuración en [src/components/viewer/config.ts](src/components/viewer/config.ts):
 ruta del modelo, escala, y un modo opcional (`APPLY_PUDU_PAINT`) que

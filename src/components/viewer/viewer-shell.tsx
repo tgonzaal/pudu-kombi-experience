@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { useProgress } from "@react-three/drei";
-import { FileBox, Minus, Pause, Play, Plus, RotateCcw } from "lucide-react";
+import { Minus, Pause, Play, Plus, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { KOMBI_MODEL_URL } from "./config";
 import type { ViewerApi } from "./viewer-scene";
@@ -38,32 +38,6 @@ function ViewerLoader({ visible }: { visible: boolean }) {
       <p className="text-xs text-muted-foreground">
         Cargando modelo… {Math.round(progress)}%
       </p>
-    </div>
-  );
-}
-
-/** Instrucciones cuando aún no se ha integrado el GLB licenciado. */
-function ModelMissingNotice() {
-  return (
-    <div className="absolute inset-x-0 top-1/2 z-10 flex -translate-y-1/2 justify-center px-4">
-      <div className="max-w-md rounded-2xl border border-border/60 bg-background/85 p-6 text-center shadow-lg backdrop-blur-md">
-        <FileBox className="mx-auto mb-3 size-8 text-primary" />
-        <h2 className="font-display text-lg font-bold">
-          Falta el modelo 3D de la Kombi
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          El visor está listo, pero necesita un modelo profesional de una
-          Volkswagen T2 Bay Window. Coloca tu GLB licenciado (con compresión
-          Draco) en:
-        </p>
-        <code className="mt-3 inline-block rounded-md bg-muted px-3 py-1.5 font-mono text-xs">
-          public/models/kombi.glb
-        </code>
-        <p className="mt-3 text-xs text-muted-foreground">
-          El flujo de licenciamiento y optimización está documentado en el
-          README, sección «Visor 3D».
-        </p>
-      </div>
     </div>
   );
 }
@@ -111,7 +85,6 @@ export function ViewerShell() {
       )}
 
       <ViewerLoader visible={showLoader} />
-      {!showLoader && status === "missing" && <ModelMissingNotice />}
 
       {!showLoader && (
         <>

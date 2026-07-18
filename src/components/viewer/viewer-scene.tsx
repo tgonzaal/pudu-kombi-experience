@@ -13,6 +13,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import gsap from "gsap";
 import { useTheme } from "next-themes";
 import { KombiModel } from "./kombi-model";
+import { ProceduralT2 } from "./t2/procedural-t2";
 import { isInstantMode } from "../experience/instant";
 
 /** API imperativa que el shell usa para los botones de cámara. */
@@ -151,7 +152,10 @@ export default function ViewerScene({
         <Lightformer intensity={0.9} position={[0, 3, -8]} scale={[10, 3, 1]} />
       </Environment>
 
-      <Suspense fallback={null}>{modelAvailable && <KombiModel />}</Suspense>
+      {/* GLB profesional si existe; si no, la T2 procedural de alta fidelidad */}
+      <Suspense fallback={null}>
+        {modelAvailable ? <KombiModel /> : <ProceduralT2 />}
+      </Suspense>
 
       {/* Piso de estudio */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
