@@ -9,7 +9,7 @@ import { RoundedBox } from "@react-three/drei";
  * soporte bajo, apenas inclinado hacia el cielo.
  */
 export function StarlinkMini({
-  position = [0, 2.045, -0.35] as [number, number, number],
+  position = [0, 2.045, -0.5] as [number, number, number],
 }) {
   const materials = useMemo(() => {
     return {

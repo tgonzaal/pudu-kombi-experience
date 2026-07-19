@@ -15,6 +15,7 @@ import { useTheme } from "next-themes";
 import { KombiModel } from "./kombi-model";
 import { ProceduralT2 } from "./t2/procedural-t2";
 import { StarlinkMini } from "./starlink-mini";
+import { PodcastInterior } from "./podcast-interior";
 import { isInstantMode } from "../experience/instant";
 
 /** API imperativa que el shell usa para los botones de cámara. */
@@ -26,8 +27,104 @@ export interface ViewerApi {
 interface ViewerSceneProps {
   autoRotate: boolean;
   modelAvailable: boolean;
+  /** true = cámara dentro de la cabina (modo podcast) */
+  inside: boolean;
   apiRef: RefObject<ViewerApi | null>;
   onReady: () => void;
+}
+
+/** Límites de órbita por modo. */
+const OUTSIDE = {
+  target: new THREE.Vector3(0, 1.05, 0),
+  position: new THREE.Vector3(5.6, 2.0, 6.4),
+  fov: 30,
+  minDistance: 3.5,
+  maxDistance: 11,
+  minPolar: 0.25,
+  maxPolar: 1.45,
+};
+const INSIDE = {
+  target: new THREE.Vector3(0, 0.72, -0.5),
+  position: new THREE.Vector3(0, 1.55, -1.9),
+  fov: 62,
+  minDistance: 0.5,
+  maxDistance: 1.9,
+  minPolar: 0.7,
+  maxPolar: 1.7,
+};
+
+/** Transición de cámara al entrar/salir de la cabina por el portón. */
+function CameraModes({
+  inside,
+  controlsRef,
+}: {
+  inside: boolean;
+  controlsRef: RefObject<OrbitControlsImpl | null>;
+}) {
+  const camera = useThree((s) => s.camera);
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+
+    const mode = inside ? INSIDE : OUTSIDE;
+    controls.enabled = false;
+
+    const persp = camera as THREE.PerspectiveCamera;
+    const fovTween = gsap.to(persp, {
+      fov: mode.fov,
+      duration: 1.2,
+      ease: "power2.inOut",
+      overwrite: "auto",
+      onUpdate: () => persp.updateProjectionMatrix(),
+    });
+    if (isInstantMode()) fovTween.progress(1);
+
+    // Punto de paso: detrás del portón trasero, a la altura de la cabina
+    const gate = new THREE.Vector3(0, 1.35, -3.4);
+    const tl = gsap.timeline({
+      defaults: { ease: "power2.inOut", overwrite: "auto" },
+      onUpdate: () => controls.update(),
+      onComplete: () => {
+        controls.minDistance = mode.minDistance;
+        controls.maxDistance = mode.maxDistance;
+        controls.minPolarAngle = mode.minPolar;
+        controls.maxPolarAngle = mode.maxPolar;
+        controls.enabled = true;
+      },
+    });
+
+    if (inside) {
+      // Al entrar los límites se relajan de inmediato para el trayecto
+      controls.minDistance = 0.05;
+      controls.maxDistance = 30;
+      tl.to(camera.position, { ...vec(gate), duration: 1.1 })
+        .to(controls.target, { ...vec(INSIDE.target), duration: 1.1 }, "<")
+        .to(camera.position, { ...vec(INSIDE.position), duration: 1.2 });
+    } else {
+      controls.minDistance = 0.05;
+      controls.maxDistance = 30;
+      tl.to(camera.position, { ...vec(gate), duration: 1.0 })
+        .to(camera.position, { ...vec(OUTSIDE.position), duration: 1.2 })
+        .to(controls.target, { ...vec(OUTSIDE.target), duration: 1.2 }, "<");
+    }
+    if (isInstantMode()) tl.progress(1);
+
+    return () => {
+      tl.kill();
+    };
+  }, [inside, camera, controlsRef]);
+
+  return null;
+}
+
+function vec(v: THREE.Vector3) {
+  return { x: v.x, y: v.y, z: v.z };
 }
 
 /** Registra zoom y reset sobre los OrbitControls. */
@@ -84,6 +181,7 @@ function ApiBridge({
 export default function ViewerScene({
   autoRotate,
   modelAvailable,
+  inside,
   apiRef,
   onReady,
 }: ViewerSceneProps) {
@@ -157,6 +255,7 @@ export default function ViewerScene({
       <Suspense fallback={null}>
         {modelAvailable ? <KombiModel /> : <ProceduralT2 />}
         <StarlinkMini />
+        <PodcastInterior />
       </Suspense>
 
       {/* Piso de estudio */}
@@ -184,10 +283,11 @@ export default function ViewerScene({
         minPolarAngle={0.25}
         maxPolarAngle={1.45}
         target={[0, 1.05, 0]}
-        autoRotate={autoRotate}
+        autoRotate={autoRotate && !inside}
         autoRotateSpeed={0.5}
       />
 
+      <CameraModes inside={inside} controlsRef={controlsRef} />
       <ApiBridge apiRef={apiRef} controlsRef={controlsRef} />
     </Canvas>
   );

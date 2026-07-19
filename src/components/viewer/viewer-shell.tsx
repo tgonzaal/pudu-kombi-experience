@@ -4,7 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { useProgress } from "@react-three/drei";
-import { Minus, Pause, Play, Plus, RotateCcw } from "lucide-react";
+import {
+  DoorOpen,
+  LogOut,
+  Minus,
+  Pause,
+  Play,
+  Plus,
+  RotateCcw,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { KOMBI_MODEL_URL } from "./config";
 import type { ViewerApi } from "./viewer-scene";
@@ -50,6 +58,7 @@ function ViewerLoader({ visible }: { visible: boolean }) {
 export function ViewerShell() {
   const apiRef = useRef<ViewerApi | null>(null);
   const [autoRotate, setAutoRotate] = useState(true);
+  const [inside, setInside] = useState(false);
   const [status, setStatus] = useState<ModelStatus>("checking");
   const [sceneReady, setSceneReady] = useState(false);
 
@@ -79,6 +88,7 @@ export function ViewerShell() {
         <ViewerScene
           autoRotate={autoRotate}
           modelAvailable={status === "ready"}
+          inside={inside}
           apiRef={apiRef}
           onReady={() => setSceneReady(true)}
         />
@@ -88,34 +98,58 @@ export function ViewerShell() {
 
       {!showLoader && (
         <>
-          {/* Panel de identidad y ficha, como en la referencia */}
-          <motion.aside
-            className="pointer-events-none absolute top-8 left-6 z-10 hidden w-60 md:block lg:left-10"
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+          {/* Entrar / salir de la cabina */}
+          <motion.div
+            className="absolute inset-x-0 bottom-14 z-10 flex justify-center"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
           >
-            <h1 className="font-display text-4xl leading-tight font-extrabold tracking-tight">
-              PUDÚ
-              <br />
-              KOMBI
-            </h1>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Movemos historias, conectamos territorios.
-            </p>
-            <div className="my-5 h-px w-10 bg-border" />
-            <dl className="space-y-2.5">
-              {SPECS.map((spec) => (
-                <div
-                  key={spec.label}
-                  className="flex items-baseline justify-between gap-3 border-b border-border/60 pb-2 text-sm"
-                >
-                  <dt className="text-muted-foreground">{spec.label}</dt>
-                  <dd className="text-right font-medium">{spec.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </motion.aside>
+            <Button size="lg" onClick={() => setInside((v) => !v)}>
+              {inside ? (
+                <>
+                  <LogOut className="size-4" />
+                  Salir de la Kombi
+                </>
+              ) : (
+                <>
+                  <DoorOpen className="size-4" />
+                  Entrar a la Kombi
+                </>
+              )}
+            </Button>
+          </motion.div>
+
+          {/* Panel de identidad y ficha, como en la referencia */}
+          {!inside && (
+            <motion.aside
+              className="pointer-events-none absolute top-8 left-6 z-10 hidden w-60 md:block lg:left-10"
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+            >
+              <h1 className="font-display text-4xl leading-tight font-extrabold tracking-tight">
+                PUDÚ
+                <br />
+                KOMBI
+              </h1>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Movemos historias, conectamos territorios.
+              </p>
+              <div className="my-5 h-px w-10 bg-border" />
+              <dl className="space-y-2.5">
+                {SPECS.map((spec) => (
+                  <div
+                    key={spec.label}
+                    className="flex items-baseline justify-between gap-3 border-b border-border/60 pb-2 text-sm"
+                  >
+                    <dt className="text-muted-foreground">{spec.label}</dt>
+                    <dd className="text-right font-medium">{spec.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </motion.aside>
+          )}
 
           {/* Controles de cámara */}
           <motion.div
@@ -140,37 +174,41 @@ export function ViewerShell() {
             >
               <Minus className="size-4" />
             </Button>
-            <Button
-              size="icon"
-              variant="secondary"
-              aria-label="Reiniciar cámara"
-              onClick={() => apiRef.current?.reset()}
-            >
-              <RotateCcw className="size-4" />
-            </Button>
+            {!inside && (
+              <Button
+                size="icon"
+                variant="secondary"
+                aria-label="Reiniciar cámara"
+                onClick={() => apiRef.current?.reset()}
+              >
+                <RotateCcw className="size-4" />
+              </Button>
+            )}
           </motion.div>
 
           {/* Auto-rotación */}
-          <motion.div
-            className="absolute bottom-6 left-6 z-10 lg:left-10"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-          >
-            <Button
-              size="sm"
-              variant={autoRotate ? "default" : "secondary"}
-              onClick={() => setAutoRotate((v) => !v)}
-              aria-pressed={autoRotate}
+          {!inside && (
+            <motion.div
+              className="absolute bottom-6 left-6 z-10 lg:left-10"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
             >
-              {autoRotate ? (
-                <Pause className="size-3.5" />
-              ) : (
-                <Play className="size-3.5" />
-              )}
-              Auto
-            </Button>
-          </motion.div>
+              <Button
+                size="sm"
+                variant={autoRotate ? "default" : "secondary"}
+                onClick={() => setAutoRotate((v) => !v)}
+                aria-pressed={autoRotate}
+              >
+                {autoRotate ? (
+                  <Pause className="size-3.5" />
+                ) : (
+                  <Play className="size-3.5" />
+                )}
+                Auto
+              </Button>
+            </motion.div>
+          )}
 
           {/* Pie */}
           <motion.p
