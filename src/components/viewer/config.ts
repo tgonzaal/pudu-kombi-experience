@@ -26,8 +26,8 @@ export const TARGET_LENGTH = 4.505;
  */
 export const APPLY_PUDU_PAINT = false;
 
-/** Verde PUDÚ tomado de la imagen de referencia. */
-export const PUDU_GREEN = "#14603c";
+/** Verde oficial de la marca PUDÚ (de public/logo.svg del proyecto pudu). */
+export const PUDU_GREEN = "#1b5e3b";
 
 /** Patrones de nombre de material que se consideran "pintura de carrocería". */
 export const PAINT_MATERIAL_PATTERNS = [
