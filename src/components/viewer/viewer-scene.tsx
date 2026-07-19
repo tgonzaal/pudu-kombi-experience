@@ -14,6 +14,7 @@ import gsap from "gsap";
 import { useTheme } from "next-themes";
 import { KombiModel } from "./kombi-model";
 import { ProceduralT2 } from "./t2/procedural-t2";
+import { StarlinkMini } from "./starlink-mini";
 import { isInstantMode } from "../experience/instant";
 
 /** API imperativa que el shell usa para los botones de cámara. */
@@ -155,6 +156,7 @@ export default function ViewerScene({
       {/* GLB profesional si existe; si no, la T2 procedural de alta fidelidad */}
       <Suspense fallback={null}>
         {modelAvailable ? <KombiModel /> : <ProceduralT2 />}
+        <StarlinkMini />
       </Suspense>
 
       {/* Piso de estudio */}
