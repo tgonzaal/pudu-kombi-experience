@@ -25,6 +25,10 @@ interface Mats {
   chrome: THREE.MeshStandardMaterial;
   led: THREE.MeshStandardMaterial;
   rug: THREE.MeshStandardMaterial;
+  cream: THREE.MeshStandardMaterial;
+  oak: THREE.MeshStandardMaterial;
+  leather: THREE.MeshStandardMaterial;
+  leatherDark: THREE.MeshStandardMaterial;
 }
 
 function useMats(): Mats {
@@ -65,6 +69,22 @@ function useMats(): Mats {
         color: "#1c211e",
         roughness: 1,
       }),
+      cream: new THREE.MeshStandardMaterial({
+        color: "#e8e1d3",
+        roughness: 0.9,
+      }),
+      oak: new THREE.MeshStandardMaterial({
+        color: "#a07c50",
+        roughness: 0.5,
+      }),
+      leather: new THREE.MeshStandardMaterial({
+        color: "#8c5a33",
+        roughness: 0.55,
+      }),
+      leatherDark: new THREE.MeshStandardMaterial({
+        color: "#5e3c22",
+        roughness: 0.6,
+      }),
     }),
     [],
   );
@@ -76,6 +96,93 @@ function useMats(): Mats {
   }, [mats]);
 
   return mats;
+}
+
+/**
+ * Forro interior profesional: tapiza paredes, cielo y piso para cubrir
+ * el reverso de la gráfica exterior (el GLB es de casco delgado).
+ * Coordenadas locales del grupo rotado: +z local = trasera del vehículo.
+ */
+function CabinLining({ m }: { m: Mats }) {
+  return (
+    <group>
+      {/* Piso de madera */}
+      <mesh material={m.oak} position={[0, 0.515, 0.08]}>
+        <boxGeometry args={[1.46, 0.025, 3.6]} />
+      </mesh>
+
+      {/* Zócalo tapizado en ambas paredes, hasta la línea de ventanas */}
+      {[-0.735, 0.735].map((x) => (
+        <group key={x}>
+          <RoundedBox
+            args={[0.025, 0.78, 3.65]}
+            radius={0.01}
+            position={[x, 0.93, 0.08]}
+            material={m.cream}
+          />
+          {/* Moldura de madera como remate superior */}
+          <mesh material={m.oak} position={[x, 1.335, 0.08]}>
+            <boxGeometry args={[0.03, 0.045, 3.65]} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Pared trasera (interior del portón) */}
+      <RoundedBox
+        args={[1.44, 0.78, 0.025]}
+        radius={0.01}
+        position={[0, 0.93, 1.92]}
+        material={m.cream}
+      />
+      <mesh material={m.oak} position={[0, 1.335, 1.92]}>
+        <boxGeometry args={[1.44, 0.045, 0.03]} />
+      </mesh>
+
+      {/* Cielo (headliner) */}
+      <mesh material={m.cream} position={[0, 1.79, 0.08]}>
+        <boxGeometry args={[1.42, 0.02, 3.6]} />
+      </mesh>
+    </group>
+  );
+}
+
+/** Asiento delantero clásico de Kombi: butaca de eco-cuero sobre base. */
+function CabSeat({ x, width, m }: { x: number; width: number; m: Mats }) {
+  const z = -1.42; // cabina delantera (en local, el frente es -z)
+  return (
+    <group position={[x, 0, z]}>
+      {/* Base / pedestal */}
+      <mesh material={m.matte} position={[0, 0.675, 0]}>
+        <boxGeometry args={[width - 0.04, 0.31, 0.48]} />
+      </mesh>
+      {/* Cojín */}
+      <RoundedBox
+        args={[width, 0.13, 0.5]}
+        radius={0.04}
+        position={[0, 0.9, 0]}
+        material={m.leather}
+      />
+      {/* Respaldo bajo, levemente reclinado */}
+      <RoundedBox
+        args={[width, 0.56, 0.11]}
+        radius={0.04}
+        position={[0, 1.2, 0.24]}
+        rotation={[0.14, 0, 0]}
+        material={m.leather}
+      />
+      {/* Costuras horizontales del tapiz */}
+      {[1.08, 1.22, 1.36].map((y) => (
+        <mesh
+          key={y}
+          material={m.leatherDark}
+          position={[0, y, 0.185 + (y - 1.08) * 0.043]}
+          rotation={[0.14, 0, 0]}
+        >
+          <boxGeometry args={[width + 0.005, 0.012, 0.1]} />
+        </mesh>
+      ))}
+    </group>
+  );
 }
 
 /** Butaca acolchada compacta. */
@@ -136,6 +243,13 @@ export function PodcastInterior() {
 
   return (
     <group rotation={[0, Math.PI, 0]}>
+      {/* Forro interior profesional */}
+      <CabinLining m={m} />
+
+      {/* Asientos de cabina: butaca del chofer + banqueta del copiloto */}
+      <CabSeat x={-0.42} width={0.5} m={m} />
+      <CabSeat x={0.27} width={0.72} m={m} />
+
       {/* Alfombra */}
       <mesh material={m.rug} position={[0, FLOOR_Y + 0.005, 1.05]}>
         <boxGeometry args={[1.3, 0.012, 1.15]} />

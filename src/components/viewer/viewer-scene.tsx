@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, type RefObject } from "react";
 import * as THREE from "three";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   ContactShadows,
   Environment,
@@ -63,6 +63,16 @@ function CameraModes({
 }) {
   const camera = useThree((s) => s.camera);
   const mounted = useRef(false);
+  const clampInside = useRef(false);
+
+  // Dentro de la cabina, la cámara no puede atravesar las paredes
+  useFrame(() => {
+    if (!clampInside.current) return;
+    const p = camera.position;
+    p.x = THREE.MathUtils.clamp(p.x, -0.55, 0.55);
+    p.y = THREE.MathUtils.clamp(p.y, 0.78, 1.62);
+    p.z = THREE.MathUtils.clamp(p.z, -1.95, 0.55);
+  });
 
   useEffect(() => {
     const controls = controlsRef.current;
@@ -74,6 +84,7 @@ function CameraModes({
 
     const mode = inside ? INSIDE : OUTSIDE;
     controls.enabled = false;
+    clampInside.current = false;
 
     const persp = camera as THREE.PerspectiveCamera;
     const fovTween = gsap.to(persp, {
@@ -96,6 +107,7 @@ function CameraModes({
         controls.minPolarAngle = mode.minPolar;
         controls.maxPolarAngle = mode.maxPolar;
         controls.enabled = true;
+        clampInside.current = inside;
       },
     });
 
