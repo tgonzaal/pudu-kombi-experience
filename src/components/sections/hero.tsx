@@ -67,8 +67,8 @@ export function Hero() {
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
           <Button size="lg" asChild>
-            <Link href="/experiencia">
-              Iniciar experiencia
+            <Link href="/kombi">
+              Ver la Kombi
               <ArrowRight className="size-4" />
             </Link>
           </Button>
