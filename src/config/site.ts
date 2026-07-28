@@ -7,7 +7,7 @@ export const siteConfig = {
   name: "PUDÚ Kombi Experience",
   shortName: "PUDÚ",
   description:
-    "Una experiencia inmersiva a bordo de la Kombi de PUDÚ. Recorre el sur de Chile en un viaje interactivo 3D.",
+    "Un estudio de podcast sobre ruedas que recorre Chile conectando emprendedores donde no hay ecosistema. Cada parada, un capítulo. Cada capítulo, una red que queda.",
   url: "https://pudu-kombi.vercel.app",
   locale: "es-CL",
   links: {

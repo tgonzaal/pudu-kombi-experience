@@ -6,7 +6,6 @@ import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/shared/container";
-import { siteConfig } from "@/config/site";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -34,7 +33,7 @@ export function Hero() {
           variants={fadeUp}
         >
           <Badge variant="accent" className="mb-6">
-            Próximamente · Experiencia 3D
+            PUDÚ by MADEINN LATAM · Kombi Tour 2026
           </Badge>
         </motion.div>
 
@@ -45,8 +44,8 @@ export function Hero() {
           variants={fadeUp}
           className="max-w-3xl font-display text-4xl font-bold tracking-tight text-balance sm:text-6xl"
         >
-          Súbete a la Kombi y recorre el{" "}
-          <span className="text-primary">sur de Chile</span>
+          Un estudio de podcast que recorre Chile{" "}
+          <span className="text-primary">tejiendo ecosistemas</span>
         </motion.h1>
 
         <motion.p
@@ -56,7 +55,10 @@ export function Hero() {
           variants={fadeUp}
           className="mt-6 max-w-xl text-lg text-pretty text-muted-foreground"
         >
-          {siteConfig.description}
+          El talento emprendedor está repartido por todo Chile, pero el
+          ecosistema que lo sostiene está concentrado en unas pocas capitales.
+          La Kombi va a buscarlo donde está: entrevista, conecta y deja red
+          instalada en cada ciudad que visita.
         </motion.p>
 
         <motion.div
@@ -73,7 +75,7 @@ export function Hero() {
             </Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="#sobre">Conocer más</Link>
+            <Link href="#propuesta">Ver la propuesta</Link>
           </Button>
         </motion.div>
       </Container>
