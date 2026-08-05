@@ -21,8 +21,8 @@ const benefits = [
 
 const numbers = [
   { value: "3", label: "viajes el primer semestre de 2027" },
-  { value: "30+", label: "comunas en total" },
-  { value: "+60", label: "emprendedores entrevistados" },
+  { value: "15", label: "comunas en total" },
+  { value: "+40", label: "emprendedores entrevistados" },
 ];
 
 export function Brands() {

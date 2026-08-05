@@ -55,10 +55,10 @@ export function Hero() {
           variants={fadeUp}
           className="mt-6 max-w-xl text-lg text-pretty text-muted-foreground"
         >
-          El talento emprendedor está repartido por todo Chile, pero el
-          ecosistema que lo sostiene está concentrado en unas pocas capitales.
-          La Kombi va a buscarlo donde está: entrevista, conecta y deja red
-          instalada en cada ciudad que visita.
+          Hay gente emprendiendo en cada rincón del país, pero la red que los
+          sostiene todavía no llega a todas partes. La Kombi va a buscarlos
+          donde están: entrevista, conecta y deja red instalada en cada ciudad
+          que visita.
         </motion.p>
 
         <motion.div

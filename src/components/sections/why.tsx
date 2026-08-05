@@ -10,8 +10,8 @@ const problems = [
     body: "En ciudades intermedias hay proyectos buenísimos que nunca conocieron a otro emprendedor de su propia comuna. Sin pares no hay comparación, sin comparación no hay ambición.",
   },
   {
-    title: "El contenido no llega al territorio",
-    body: "Las historias que inspiran siempre son de otros: de Santiago, de afuera. Nadie graba al que armó su taller en el sur o su marca en el norte, y esa historia es la que de verdad moviliza a su vecino.",
+    title: "La innovación no tiene dirección fija",
+    body: "Las buenas ideas aparecen en cualquier ciudad, no en las que salen en las noticias. Queremos demostrarlo grabando esas historias donde ocurren, porque nada motiva más a alguien que ver a un vecino lográndolo.",
   },
 ];
 
@@ -27,10 +27,10 @@ export function Why() {
             No falta talento. Falta tejido.
           </h2>
           <p className="mt-5 text-lg text-pretty text-muted-foreground">
-            En Chile el emprendimiento se mide desde el centro, pero pasa en
-            todas partes. El problema no es que no haya gente haciendo cosas: es
-            que están haciéndolas sin saber que hay alguien más, a treinta
-            kilómetros, peleando exactamente lo mismo.
+            En Chile se emprende en todas partes, pero casi siempre en solitario.
+            El problema no es que no haya gente haciendo cosas: es que están
+            haciéndolas sin saber que hay alguien más, a treinta kilómetros,
+            peleando exactamente lo mismo.
           </p>
         </div>
 
@@ -63,11 +63,15 @@ export function Why() {
                 a un evento que no pueden costear. El estudio tiene que moverse.
               </p>
               <p className="leading-relaxed">
-                Una Kombi entra a cualquier plaza, se instala en cualquier
-                pueblo y no necesita infraestructura previa. Es un estudio de
-                podcast, un escenario y una invitación al mismo tiempo: cuando
-                se estaciona, la gente se acerca sola. Eso ninguna productora lo
-                logra con un set de televisión.
+                Y porque una Kombi no pasa desapercibida. ¿Quién no se queda
+                mirando una Kombi cuando pasa? Genera cariño, curiosidad y
+                conversación antes de que alguien baje de ella. Esa atención es
+                justamente lo que queremos: que la gente se acerque sola.
+              </p>
+              <p className="leading-relaxed">
+                Además entra a cualquier plaza, se instala en cualquier pueblo y
+                no necesita infraestructura previa. Es un estudio de podcast, un
+                escenario y una invitación al mismo tiempo.
               </p>
             </div>
           </div>

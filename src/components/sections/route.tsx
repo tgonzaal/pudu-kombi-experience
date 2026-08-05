@@ -1,19 +1,17 @@
 import { Container } from "@/components/shared/container";
 
+/** `hub`: ciudades donde ya existe ecosistema emprendedor. */
 const firstRoute = [
-  "Concepción",
-  "Coronel",
-  "Cabrero",
-  "Los Ángeles",
-  "Nacimiento",
-  "Angol",
-  "Victoria",
-  "Temuco",
-  "Villarrica",
-  "Loncoche",
-  "Panguipulli",
-  "Paillaco",
-  "Valdivia",
+  { name: "Concepción", hub: true },
+  { name: "Cabrero", hub: false },
+  { name: "Los Ángeles", hub: true },
+  { name: "Nacimiento", hub: false },
+  { name: "Angol", hub: false },
+  { name: "Victoria", hub: false },
+  { name: "Temuco", hub: false },
+  { name: "Villarrica", hub: false },
+  { name: "Panguipulli", hub: false },
+  { name: "Valdivia", hub: true },
 ];
 
 const zones = [
@@ -76,9 +74,15 @@ export function RouteSection() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-3">
             {firstRoute.map((stop, i) => (
-              <span key={stop} className="flex items-center gap-2">
-                <span className="rounded-full border bg-secondary/60 px-3 py-1 font-display text-sm font-semibold">
-                  {stop}
+              <span key={stop.name} className="flex items-center gap-2">
+                <span
+                  className={
+                    stop.hub
+                      ? "rounded-full border border-accent bg-accent/25 px-3 py-1 font-display text-sm font-semibold"
+                      : "rounded-full border bg-secondary/60 px-3 py-1 font-display text-sm font-semibold"
+                  }
+                >
+                  {stop.name}
                 </span>
                 {i < firstRoute.length - 1 && (
                   <span aria-hidden className="text-primary/60">
@@ -89,7 +93,16 @@ export function RouteSection() {
             ))}
           </div>
 
-          <p className="mt-8 text-center text-sm text-muted-foreground">
+          <p className="mt-6 flex items-center justify-center gap-2 text-center text-sm text-muted-foreground">
+            <span
+              aria-hidden
+              className="size-3 shrink-0 rounded-full border border-accent bg-accent/60"
+            />
+            Ciudades donde ya existe ecosistema emprendedor: ahí conectamos con
+            lo que hay. En el resto, lo construimos.
+          </p>
+
+          <p className="mt-4 text-center text-sm text-muted-foreground">
             Cada parada: entrevistas, un encuentro abierto y una red local
             activada. La lista final se ajusta con los contactos de cada comuna.
           </p>
