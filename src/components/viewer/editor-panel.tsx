@@ -308,6 +308,23 @@ export function EditorPanel({
           <label className="flex items-start gap-2 text-xs">
             <input
               type="checkbox"
+              checked={selected.mirror ?? false}
+              onChange={(e) =>
+                onUpdate(selected.id, { mirror: e.target.checked })
+              }
+              className="mt-0.5 accent-primary"
+            />
+            <span>
+              <span className="font-medium">Espejar</span>
+              <span className="block text-muted-foreground">
+                Voltea la imagen. Para que una silueta mire hacia el otro lado.
+              </span>
+            </span>
+          </label>
+
+          <label className="flex items-start gap-2 text-xs">
+            <input
+              type="checkbox"
               checked={selected.knockoutBlack}
               onChange={(e) =>
                 onUpdate(selected.id, { knockoutBlack: e.target.checked })

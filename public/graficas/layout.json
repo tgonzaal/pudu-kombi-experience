@@ -55,56 +55,60 @@
       "knockoutBlack": false
     },
     {
-      "id": "a0w8sxs6",
+      "id": "xz7gbyh1",
       "name": "Pudú",
       "face": "copiloto",
       "src": "/graficas/pudu.png",
-      "h": -1.682,
-      "v": 0.896,
-      "width": 0.698,
+      "h": -1.7766719039177736,
+      "v": 0.8864467972134251,
+      "width": 0.56,
       "aspect": 1.1004566210045663,
       "rotation": 0,
       "opacity": 1,
-      "knockoutBlack": false
+      "knockoutBlack": false,
+      "mirror": true
     },
     {
-      "id": "oa50xe5s",
+      "id": "e2pr6dmg",
       "name": "Auspiciadores",
       "face": "copiloto",
       "src": "/graficas/auspiciadores.png",
-      "h": -0.664,
-      "v": 1.022,
-      "width": 0.835,
+      "h": -1.1,
+      "v": 1.0,
+      "width": 0.65,
       "aspect": 0.4580152671755725,
       "rotation": 0,
       "opacity": 1,
-      "knockoutBlack": false
+      "knockoutBlack": false,
+      "mirror": false
     },
     {
-      "id": "tdi8h0uj",
+      "id": "tjtkqs0o",
       "name": "Frase",
       "face": "copiloto",
       "src": "/graficas/frase.png",
-      "h": 0.585,
-      "v": 1.028,
-      "width": 1.158,
+      "h": 0.047637525553187454,
+      "v": 0.900681193125819,
+      "width": 1.4,
       "aspect": 0.42857142857142855,
       "rotation": 0,
       "opacity": 1,
-      "knockoutBlack": false
+      "knockoutBlack": false,
+      "mirror": false
     },
     {
-      "id": "0zls0mip",
+      "id": "ufjp0e0f",
       "name": "Logo PUDÚ",
       "face": "copiloto",
       "src": "/graficas/logo.png",
-      "h": 1.617,
-      "v": 1.023,
-      "width": 0.402,
+      "h": 1.4758679711421636,
+      "v": 1.0154743801566133,
+      "width": 0.6,
       "aspect": 0.5317460317460317,
       "rotation": 0,
       "opacity": 1,
-      "knockoutBlack": false
+      "knockoutBlack": false,
+      "mirror": false
     }
   ]
 }

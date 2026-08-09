@@ -34,6 +34,12 @@ export interface Decal {
   aspect: number;
   /** Giro en grados sobre el plano de la cara. */
   rotation: number;
+  /**
+   * Voltea la imagen horizontalmente. Los textos ya se leen bien en los dos
+   * costados; esto es para las siluetas, que en un lado tienen que mirar
+   * hacia el otro.
+   */
+  mirror?: boolean;
   opacity: number;
   /**
    * Con `true`, el negro de la imagen se vuelve transparente. Sirve para
@@ -273,6 +279,7 @@ export function makeDecal(
     width: lado ? 0.9 : 0.5,
     aspect,
     rotation: 0,
+    mirror: false,
     opacity: 1,
     knockoutBlack: false,
   };

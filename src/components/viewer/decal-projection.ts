@@ -58,7 +58,7 @@ export interface DecalUniforms {
   uDecalRect: { value: THREE.Vector4[] };
   /** x = cara · y = opacidad · z = giro (rad) · w = activa */
   uDecalMisc: { value: THREE.Vector4[] };
-  /** x = ranura de textura · y = 1 si el negro va transparente */
+  /** x = ranura · y = 1 si el negro va transparente · z = 1 si va espejada */
   uDecalTex: { value: THREE.Vector4[] };
 }
 
@@ -177,7 +177,9 @@ function decalBlocks() {
           p = vec2(p.x * cr - p.y * sr, p.x * sr + p.y * cr);
           vec2 uv = p / hs * 0.5 + 0.5;
           if (uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) {
-            vec2 tuv = vec2(voltear ? 1.0 - uv.x : uv.x, uv.y);
+            bool espejo = uDecalTex[${i}].z > 0.5;
+            bool volt = espejo ? !voltear : voltear;
+            vec2 tuv = vec2(volt ? 1.0 - uv.x : uv.x, uv.y);
             int slot = int(uDecalTex[${i}].x);
             vec4 tex = vec4(0.0);
             ${texPicker()}
@@ -303,6 +305,11 @@ export function writeUniforms(
       THREE.MathUtils.degToRad(decal.rotation),
       1,
     );
-    uniforms.uDecalTex.value[i].set(slot, decal.knockoutBlack ? 1 : 0, 0, 0);
+    uniforms.uDecalTex.value[i].set(
+      slot,
+      decal.knockoutBlack ? 1 : 0,
+      decal.mirror ? 1 : 0,
+      0,
+    );
   }
 }
