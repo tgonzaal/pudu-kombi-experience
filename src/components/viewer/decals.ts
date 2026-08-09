@@ -146,6 +146,12 @@ export function saveLivery(livery: Livery) {
   }
 }
 
+/** Bota el borrador de este navegador. */
+export function clearLivery() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(STORAGE_KEY);
+}
+
 /**
  * Disposición publicada: un archivo del sitio, igual para todo el que entre.
  * El guardado del navegador es el borrador; esto es lo que sale en la página.

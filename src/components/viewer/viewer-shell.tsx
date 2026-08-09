@@ -21,6 +21,7 @@ import { MAX_DECALS } from "./decal-projection";
 import {
   FACES,
   LIBRARY,
+  clearLivery,
   defaultLivery,
   fetchPublishedLivery,
   fileToDecalSource,
@@ -75,7 +76,10 @@ export function ViewerShell() {
   const [status, setStatus] = useState<ModelStatus>("checking");
   const [sceneReady, setSceneReady] = useState(false);
 
-  const [livery, setLivery] = useState<Livery>(defaultLivery);
+  /** Lo que ve cualquiera que entre. */
+  const [oficial, setOficial] = useState<Livery>(defaultLivery);
+  /** Cambios sin publicar, guardados solo en este navegador. */
+  const [borrador, setBorrador] = useState<Livery | null>(null);
   const [editing, setEditing] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -85,21 +89,20 @@ export function ViewerShell() {
   // dispara con el estado del primer render y pisa lo que había.
   const [loaded, setLoaded] = useState(false);
 
+  /**
+   * Mirando se ve lo publicado, siempre. El borrador aparece al abrir el
+   * editor: si mandara también fuera de él, cada quien vería su propia Kombi
+   * y creería que lo publicado no llegó.
+   */
+  const livery = editing ? (borrador ?? oficial) : oficial;
   const { decals } = livery;
 
   useEffect(() => {
     let vivo = true;
-    // Manda el borrador de este navegador; si no hay, lo publicado; y si
-    // tampoco, la disposición de fábrica.
-    const local = loadLivery();
-    if (local) {
-      setLivery(local);
-      setLoaded(true);
-      return;
-    }
+    setBorrador(loadLivery());
     fetchPublishedLivery().then((publicada) => {
       if (!vivo) return;
-      if (publicada) setLivery(publicada);
+      if (publicada) setOficial(publicada);
       setLoaded(true);
     });
     return () => {
@@ -127,25 +130,36 @@ export function ViewerShell() {
    * una gráfica dispara decenas de cambios por segundo.
    */
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || !borrador) return;
     const t = setTimeout(() => {
       try {
-        saveLivery(livery);
+        saveLivery(borrador);
         setError((e) => (e?.startsWith("No se pudo guardar") ? null : e));
       } catch (e) {
         setError(e instanceof Error ? e.message : "No se pudo guardar.");
       }
     }, 400);
     return () => clearTimeout(t);
-  }, [livery, loaded]);
+  }, [borrador, loaded]);
 
   /**
    * Siempre a partir del estado anterior: dos cambios en el mismo instante
    * —mover una gráfica y tocar un color— si no, se pisan entre ellos.
    */
-  const commit = useCallback((mut: (prev: Livery) => Livery) => {
-    setPublished(false);
-    setLivery(mut);
+  const commit = useCallback(
+    (mut: (prev: Livery) => Livery) => {
+      setPublished(false);
+      setBorrador((prev) => mut(prev ?? oficial));
+    },
+    [oficial],
+  );
+
+  /** Vuelve a lo publicado y bota lo que había en este navegador. */
+  const descartar = useCallback(() => {
+    clearLivery();
+    setBorrador(null);
+    setSelectedId(null);
+    setError(null);
   }, []);
 
   const setDecals = useCallback(
@@ -232,6 +246,9 @@ export function ViewerShell() {
     setPublishing(true);
     try {
       await publishLivery(livery);
+      setOficial(livery);
+      setBorrador(null);
+      clearLivery();
       setPublished(true);
       setError(null);
     } catch (e) {
@@ -453,6 +470,8 @@ export function ViewerShell() {
                   paintTop={livery.top}
                   paintBottom={livery.bottom}
                   onPaint={paint}
+                  hasDraft={borrador !== null}
+                  onDiscard={descartar}
                   onPublish={publish}
                   publishing={publishing}
                   published={published}

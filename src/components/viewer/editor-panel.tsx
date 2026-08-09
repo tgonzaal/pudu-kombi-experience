@@ -54,6 +54,8 @@ interface EditorPanelProps {
   paintTop: string;
   paintBottom: string;
   onPaint: (patch: { top?: string; bottom?: string }) => void;
+  hasDraft: boolean;
+  onDiscard: () => void;
   onPublish: () => void;
   publishing: boolean;
   published: boolean;
@@ -112,6 +114,8 @@ export function EditorPanel({
   paintTop,
   paintBottom,
   onPaint,
+  hasDraft,
+  onDiscard,
   onPublish,
   publishing,
   published,
@@ -366,9 +370,18 @@ export function EditorPanel({
               : "Guardar en la página"}
         </Button>
         <p className="text-xs text-muted-foreground">
-          Mientras editas se guarda un borrador en este navegador. Al guardar en
-          la página, esta disposición pasa a ser la que se ve en “La Kombi”.
+          Mientras editas se guarda un borrador en este navegador; al cerrar el
+          editor se muestra lo publicado. Al guardar en la página, esto pasa a
+          ser lo que ve cualquiera.
         </p>
+        {hasDraft && (
+          <button
+            className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+            onClick={onDiscard}
+          >
+            Descartar mis cambios y volver a lo publicado
+          </button>
+        )}
         <div className="flex gap-2">
           <Button
             size="sm"

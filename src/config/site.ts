@@ -8,7 +8,7 @@ export const siteConfig = {
   shortName: "PUDÚ",
   description:
     "Un estudio de podcast sobre ruedas que recorre Chile conectando emprendedores donde no hay ecosistema. Cada parada, un capítulo. Cada capítulo, una red que queda.",
-  url: "https://pudu-kombi.vercel.app",
+  url: "https://kombipudu.vercel.app",
   locale: "es-CL",
   links: {
     instagram: "https://instagram.com/pudu",
