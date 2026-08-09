@@ -1,8 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
+import type { Decal } from "./decals";
+import {
+  decalTextures,
+  getDecalUniforms,
+  patchMaterial,
+  writePaint,
+  writeUniforms,
+} from "./decal-projection";
+import { PAINT_BOTTOM_DEFAULT, PAINT_TOP_DEFAULT } from "./decals";
 import {
   APPLY_PUDU_PAINT,
   DRACO_DECODER_PATH,
@@ -35,8 +44,71 @@ function makePuduPaint(name: string) {
  * escala real del vehículo, lo apoya en el piso y prepara sombras
  * y materiales. No altera la geometría original.
  */
-export function KombiModel() {
+/** Carga las imágenes de las gráficas y avisa cuando llega alguna nueva. */
+function useDecalTextures(decals: Decal[]) {
+  const [version, bump] = useState(0);
+
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    let alive = true;
+    decals
+      .map((d) => d.src)
+      .filter((src) => !decalTextures.has(src))
+      .forEach((src) => {
+        loader.load(src, (texture) => {
+          if (!alive) {
+            texture.dispose();
+            return;
+          }
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.anisotropy = 8;
+          texture.wrapS = THREE.ClampToEdgeWrapping;
+          texture.wrapT = THREE.ClampToEdgeWrapping;
+          decalTextures.set(src, texture);
+          bump((n) => n + 1);
+        });
+      });
+
+    return () => {
+      alive = false;
+    };
+  }, [decals]);
+
+  return version;
+}
+
+export function KombiModel({
+  decals = [],
+  paintTop = PAINT_TOP_DEFAULT,
+  paintBottom = PAINT_BOTTOM_DEFAULT,
+}: {
+  decals?: Decal[];
+  paintTop?: string;
+  paintBottom?: string;
+}) {
   const { scene } = useGLTF(KOMBI_MODEL_URL, DRACO_DECODER_PATH);
+  const uniforms = getDecalUniforms();
+  const version = useDecalTextures(decals);
+
+  // El material se prepara una sola vez; los uniforms se refrescan al editar.
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        const materials = Array.isArray(child.material)
+          ? child.material
+          : [child.material];
+        materials.forEach((m) => patchMaterial(m, uniforms));
+      }
+    });
+  }, [scene, uniforms]);
+
+  useEffect(() => {
+    writeUniforms(uniforms, decals, decalTextures);
+  }, [uniforms, decals, version]);
+
+  useEffect(() => {
+    writePaint(uniforms, paintTop, paintBottom);
+  }, [uniforms, paintTop, paintBottom]);
 
   const { scale, position } = useMemo(() => {
     // Sombras + calidad de texturas

@@ -1,0 +1,110 @@
+{
+  "top": "#f2f2f0",
+  "bottom": "#101010",
+  "decals": [
+    {
+      "id": "nth8ff1j",
+      "name": "Pudú",
+      "face": "piloto",
+      "src": "/graficas/pudu.png",
+      "h": -1.7766719039177736,
+      "v": 0.8864467972134251,
+      "width": 0.56,
+      "aspect": 1.1004566210045663,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    },
+    {
+      "id": "fj37l2fm",
+      "name": "Auspiciadores",
+      "face": "piloto",
+      "src": "/graficas/auspiciadores.png",
+      "h": -1.4150148780305791,
+      "v": 1.0309361423904786,
+      "width": 0.6,
+      "aspect": 0.4580152671755725,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    },
+    {
+      "id": "cxmsqg7j",
+      "name": "Frase",
+      "face": "piloto",
+      "src": "/graficas/frase.png",
+      "h": 0.047637525553187454,
+      "v": 0.900681193125819,
+      "width": 1.4,
+      "aspect": 0.42857142857142855,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    },
+    {
+      "id": "01puz7i7",
+      "name": "Logo PUDÚ",
+      "face": "piloto",
+      "src": "/graficas/logo.png",
+      "h": 1.4758679711421636,
+      "v": 1.0154743801566133,
+      "width": 0.6,
+      "aspect": 0.5317460317460317,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    },
+    {
+      "id": "a0w8sxs6",
+      "name": "Pudú",
+      "face": "copiloto",
+      "src": "/graficas/pudu.png",
+      "h": -1.682,
+      "v": 0.896,
+      "width": 0.698,
+      "aspect": 1.1004566210045663,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    },
+    {
+      "id": "oa50xe5s",
+      "name": "Auspiciadores",
+      "face": "copiloto",
+      "src": "/graficas/auspiciadores.png",
+      "h": -0.664,
+      "v": 1.022,
+      "width": 0.835,
+      "aspect": 0.4580152671755725,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    },
+    {
+      "id": "tdi8h0uj",
+      "name": "Frase",
+      "face": "copiloto",
+      "src": "/graficas/frase.png",
+      "h": 0.585,
+      "v": 1.028,
+      "width": 1.158,
+      "aspect": 0.42857142857142855,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    },
+    {
+      "id": "0zls0mip",
+      "name": "Logo PUDÚ",
+      "face": "copiloto",
+      "src": "/graficas/logo.png",
+      "h": 1.617,
+      "v": 1.023,
+      "width": 0.402,
+      "aspect": 0.5317460317460317,
+      "rotation": 0,
+      "opacity": 1,
+      "knockoutBlack": false
+    }
+  ]
+}
