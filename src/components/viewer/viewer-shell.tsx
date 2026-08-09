@@ -307,7 +307,6 @@ export function ViewerShell() {
           decals={decals}
           paintTop={livery.top}
           paintBottom={livery.bottom}
-          scene={livery.scene}
           editing={editing}
           selectedDecalId={selectedId}
           onSelectDecal={setSelectedId}
@@ -468,8 +467,6 @@ export function ViewerShell() {
                   onAddFromLibrary={addFromLibrary}
                   onUpdate={update}
                   onRemove={remove}
-                  scene={livery.scene}
-                  onScene={(scene) => commit((prev) => ({ ...prev, scene }))}
                   paintTop={livery.top}
                   paintBottom={livery.bottom}
                   onPaint={paint}

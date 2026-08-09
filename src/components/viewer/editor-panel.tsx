@@ -12,7 +12,6 @@ import {
   type Decal,
   type Face,
 } from "./decals";
-import { SCENE_LIST, type SceneId } from "./scenes";
 
 /** Muestra de color con su valor, para elegir la pintura. */
 function ColorField({
@@ -52,8 +51,6 @@ interface EditorPanelProps {
   onAddFromLibrary: (src: string) => void;
   onUpdate: (id: string, patch: Partial<Decal>) => void;
   onRemove: (id: string) => void;
-  scene: SceneId;
-  onScene: (scene: SceneId) => void;
   paintTop: string;
   paintBottom: string;
   onPaint: (patch: { top?: string; bottom?: string }) => void;
@@ -114,8 +111,6 @@ export function EditorPanel({
   onAddFromLibrary,
   onUpdate,
   onRemove,
-  scene,
-  onScene,
   paintTop,
   paintBottom,
   onPaint,
@@ -145,23 +140,6 @@ export function EditorPanel({
           Se suman a la gráfica que ya trae la Kombi. Arrástralas sobre la
           carrocería y se guardan solas.
         </p>
-      </div>
-
-      <div>
-        <span className="text-xs text-muted-foreground">Escena</span>
-        <div className="mt-2 grid grid-cols-2 gap-1">
-          {SCENE_LIST.map((e) => (
-            <Button
-              key={e.id}
-              size="sm"
-              variant={scene === e.id ? "default" : "secondary"}
-              className="text-xs"
-              onClick={() => onScene(e.id)}
-            >
-              {e.label}
-            </Button>
-          ))}
-        </div>
       </div>
 
       <div>

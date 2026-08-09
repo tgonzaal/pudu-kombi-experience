@@ -9,8 +9,6 @@
  * todos por aquí, para poder moverlos y redimensionarlos sin rehornear nada.
  */
 
-import { isSceneId, type SceneId } from "./scenes";
-
 /** Cara de la carrocería sobre la que se pega la gráfica. */
 export type Face = "piloto" | "copiloto" | "trasera" | "frontal";
 
@@ -86,10 +84,8 @@ export const LIBRARY: { name: string; src: string; aspect: number }[] = [
 export const PAINT_TOP_DEFAULT = "#f2f2f0";
 export const PAINT_BOTTOM_DEFAULT = "#101010";
 
-/** Todo lo que define cómo se ve la Kombi: escena, pintura y gráficas. */
+/** Todo lo que define cómo se ve la Kombi: pintura y gráficas. */
 export interface Livery {
-  /** Entorno en el que se muestra. */
-  scene: SceneId;
   /** Color de la mitad de arriba (techo y sobre la línea de cintura). */
   top: string;
   /** Color de la franja de abajo. */
@@ -99,7 +95,6 @@ export interface Livery {
 
 export function defaultLivery(): Livery {
   return {
-    scene: "estudio",
     top: PAINT_TOP_DEFAULT,
     bottom: PAINT_BOTTOM_DEFAULT,
     decals: defaultDecals(),
@@ -115,7 +110,6 @@ function parseLivery(value: unknown): Livery | null {
     const v = value as Partial<Livery>;
     if (!Array.isArray(v.decals)) return null;
     return {
-      scene: isSceneId(v.scene) ? v.scene : "estudio",
       top: typeof v.top === "string" ? v.top : PAINT_TOP_DEFAULT,
       bottom: typeof v.bottom === "string" ? v.bottom : PAINT_BOTTOM_DEFAULT,
       decals: v.decals,
