@@ -15,6 +15,8 @@ import { useTheme } from "next-themes";
 import { KombiModel } from "./kombi-model";
 import { ProceduralT2 } from "./t2/procedural-t2";
 import { DecalHandles } from "./decal-handles";
+import { RoadStage } from "./scenes/road";
+import { SCENES, type SceneId } from "./scenes";
 import type { Decal } from "./decals";
 import { isInstantMode } from "../experience/instant";
 
@@ -35,6 +37,8 @@ interface ViewerSceneProps {
   decals?: Decal[];
   paintTop?: string;
   paintBottom?: string;
+  /** Entorno en el que se muestra la Kombi. */
+  scene?: SceneId;
   editing?: boolean;
   selectedDecalId?: string | null;
   onSelectDecal?: (id: string) => void;
@@ -145,6 +149,7 @@ export default function ViewerScene({
   decals = [],
   paintTop,
   paintBottom,
+  scene = "estudio",
   editing = false,
   selectedDecalId = null,
   onSelectDecal,
@@ -155,7 +160,11 @@ export default function ViewerScene({
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
-  const bg = isDark ? "#14171a" : "#e9e6e0";
+  const enRuta = scene === "carretera";
+  const ruta = SCENES.carretera.colors;
+
+  // En el estudio el fondo sigue al tema; una carretera tiene el suyo.
+  const bg = enRuta ? ruta.niebla : isDark ? "#14171a" : "#e9e6e0";
   const floor = isDark ? "#191d20" : "#dfdbd3";
 
   return (
@@ -183,11 +192,12 @@ export default function ViewerScene({
       }}
     >
       <color attach="background" args={[bg]} />
-      <fog attach="fog" args={[bg, 16, 42]} />
+      <fog attach="fog" args={enRuta ? [bg, 45, 320] : [bg, 16, 42]} />
 
       <directionalLight
-        position={[5, 8, 4]}
-        intensity={1.4}
+        position={enRuta ? [-9, 5, 7] : [5, 8, 4]}
+        color={enRuta ? "#ffd9a8" : "#ffffff"}
+        intensity={enRuta ? 2.1 : 1.4}
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-6}
@@ -197,7 +207,17 @@ export default function ViewerScene({
         shadow-bias={-0.0002}
         shadow-normalBias={0.02}
       />
-      <directionalLight position={[-6, 4, -4]} intensity={0.35} />
+      <directionalLight
+        position={[-6, 4, -4]}
+        intensity={enRuta ? 0.15 : 0.35}
+      />
+      {enRuta && (
+        // Rebote del cielo, para que las sombras no queden muertas
+        <hemisphereLight
+          args={[ruta.cenit, ruta.tierra, 1.1]}
+          position={[0, 10, 0]}
+        />
+      )}
 
       {/* Estudio HDRI generado con lightformers (sin assets externos) */}
       <Environment resolution={512} frames={1}>
@@ -245,16 +265,22 @@ export default function ViewerScene({
         )}
       </Suspense>
 
-      {/* Piso de estudio */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <circleGeometry args={[30, 48]} />
-        <meshStandardMaterial color={floor} roughness={0.95} />
-      </mesh>
+      {enRuta ? (
+        <RoadStage colors={ruta} />
+      ) : (
+        /* Piso de estudio */
+        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <circleGeometry args={[30, 48]} />
+          <meshStandardMaterial color={floor} roughness={0.95} />
+        </mesh>
+      )}
+      {/* En la carretera la sombra va más marcada y por encima de las
+          líneas pintadas, si no la Kombi parece flotar sobre el asfalto. */}
       <ContactShadows
-        position={[0, 0.001, 0]}
-        opacity={0.5}
-        scale={12}
-        blur={2.6}
+        position={[0, enRuta ? 0.012 : 0.001, 0]}
+        opacity={enRuta ? 0.8 : 0.5}
+        scale={enRuta ? 10 : 12}
+        blur={enRuta ? 1.8 : 2.6}
         far={2.2}
         resolution={512}
       />
